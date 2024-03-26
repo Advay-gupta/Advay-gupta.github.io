@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Map Visualization</title>
+  <!-- Load d3.js -->
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+  <style>
+    /* Tooltip styles */
+    .tooltip {
+      position: absolute;
+      top: 50px; /* Adjust as needed */
+      left: 50%; /* Center horizontally */
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+      pointer-events: none; /* Ensure the tooltip does not block mouse events */
+      transition: opacity 0.3s ease-in-out; /* Add a smooth transition */
+      z-index: 999; /* Ensure it's above other elements */
+    }
+
+    .tooltipPerm {
+      position: absolute;
+      font-size: 30px;
+      top: 50px; /* Adjust as needed */
+      left: 50%; /* Center horizontally */
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 25px;
+      padding-left: 50px;
+      padding-right: 50px;
+      border-radius: 5px;
+      pointer-events: none; /* Ensure the tooltip does not block mouse events */
+      transition: opacity 0.3s ease-in-out; /* Add a smooth transition */
+      z-index: 999; /* Ensure it's above other elements */
+    }
+  </style>
+</head>
+<body>
+  <!-- Add year and month tooltips -->
+  <div class="tooltipPerm" id="yearMonthTooltip"></div>
+
+  <!-- Add year and month sliders -->
+  <div>
+    <label for="yearSlider">Year:</label>
+    <input type="range" min="2017" max="2020" value="2017" class="slider" id="yearSlider" disabled>
+    <!-- <span id="yearValue"></span> -->
+  </div>
+  <div>
+    <label for="monthSlider">Month:</label>
+    <input type="range" min="1" max="12" value="1" class="slider" id="monthSlider" disabled>
+    <!-- <span id="monthValue"></span> -->
+
+    <button id="prevMonth">←</button>
+    <button id="nextMonth">→</button>
+  </div>
+
+  <!-- Create an element where the map will take place -->
+  <svg id="my_dataviz" width="800" height="600"></svg>
+
+  <!-- Tooltip -->
+  <div class="tooltip" style="opacity: 0;"></div>
+
+  <script>
+    var monthList = [
+    'Filler', 'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    // The svg
+    var svg = d3.select("svg"),
+      width = +svg.attr("width"),
+      height = +svg.attr("height");
+
+    // Map and projection
+    var path = d3.geoPath();
+    var projection = d3.geoMercator()
+      .scale(150)
+      .center([0, 20])
+      .translate([width / 2, height / 2]);
+
+    // Color scale
+    var colorScale = d3.scaleThreshold()
+      .domain([10, 20, 30, 40, 50, 60, 70, 80, 90])
+      .range(d3.schemeBlues[9]);
+
+    // Load external data and boot
+    d3.queue()
+      .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+      .defer(d3.csv, "FinalDatabase_updated.csv?v=1") // Load CSV data with unique query parameter
+      .await(ready);
+
+    function ready(error, topo, data) {
+      var yearSlider = document.getElementById("yearSlider");
+      var monthSlider = document.getElementById("monthSlider");
+      var prevMonthButton = document.getElementById("prevMonth");
+      var nextMonthButton = document.getElementById("nextMonth");
+      var yearOutput = document.getElementById("yearValue");
+      var monthOutput = document.getElementById("monthValue");
+      var tooltipPerm = document.getElementById("yearMonthTooltip");
+
+      // Draw the initial map
+      drawMap(topo, data, yearSlider.value, monthSlider.value);
+
+      // Update year and month values
+      updateYearMonth();
+
+      yearSlider.oninput = function () {
+        yearOutput.innerHTML = this.value;
+        var selectedYear = this.value;
+        if (selectedYear == "2020") {
+          monthSlider.max = "10"; // Limit month slider range
+          if (parseInt(monthSlider.value) > 10) {
+            monthOutput.innerHTML = "10";
+            monthSlider.value = "10";
+          }
+        } else {
+          monthSlider.max = "12"; // Reset month slider range
+        }
+        redrawMap(topo, data, this.value, monthSlider.value); // Redraw map when year changes
+        updateYearMonth();
+      }
+
+      monthSlider.oninput = function () {
+        monthOutput.innerHTML = this.value;
+        redrawMap(topo, data, yearSlider.value, this.value); // Redraw map when month changes
+        updateYearMonth();
+      }
+
+      // Function to update the year and month tooltip
+      function updateYearMonth() {
+        var year = yearSlider.value;
+        var month = monthSlider.value;
+        tooltipPerm.innerHTML = "<strong>" + monthList[parseInt(month)] + "</strong> " + year; // Update tooltip content
+      }
+
+      document.addEventListener("keydown", function(event) {
+        var key = event.key;
+        if (key === "ArrowLeft") {
+          if (parseInt(monthSlider.value) > 1) {
+            monthSlider.value = parseInt(monthSlider.value) - 1;
+          } else {
+            if (parseInt(yearSlider.value) > 2017) {
+              yearSlider.value = parseInt(yearSlider.value) - 1;
+              //yearOutput.innerHTML = yearSlider.value;
+              monthSlider.value = 12;
+              //monthOutput.innerHTML = monthSlider.value;
+            }
+          }
+          redrawMap(topo, data, yearSlider.value, monthSlider.value);
+          updateYearMonth();
+        } else if (key === "ArrowRight") {
+          console.log(monthSlider.value, " ", monthSlider.max);
+          console.log(yearSlider.value);
+          if (parseInt(monthSlider.value) < parseInt(monthSlider.max)) {
+            monthSlider.value = parseInt(monthSlider.value) + 1;
+          } else {
+            if (parseInt(yearSlider.value) < 2020) {
+              yearSlider.value = parseInt(yearSlider.value) + 1;
+              //yearOutput.innerHTML = yearSlider.value;
+              monthSlider.value = 1;
+              //monthOutput.innerHTML = monthSlider.value;
+            }
+          }
+          redrawMap(topo, data, yearSlider.value, monthSlider.value);
+          updateYearMonth();
+        }
+      });
+
+      prevMonthButton.onclick = function () {
+        var currentMonth = parseInt(monthSlider.value);
+        if (currentMonth > 1) {
+          monthSlider.value = (currentMonth - 1).toString();
+          monthSlider.oninput(); // Trigger the input event
+          updateYearMonth();
+        }
+      }
+
+      nextMonthButton.onclick = function () {
+        var currentMonth = parseInt(monthSlider.value);
+        if (currentMonth < 12) {
+          monthSlider.value = (currentMonth + 1).toString();
+          monthSlider.oninput(); // Trigger the input event
+          updateYearMonth();
+        }
+      }
+
+      function drawMap(topo, data, year, month) {
+        console.log(year + "-" + (month.length === 1 ? '0' + month : month));
+        var filteredData = data.filter(function (d) {
+          var modifiedMonthString = month.length === 1 ? '0' + month : month;
+          return d.Release_date.includes(year + "-" + modifiedMonthString);
+        });
+
+        // Store all unique values of the 'Country'
+        // column in filteredData
+        var uniqueCountries = [...new Set(filteredData.map(d => d.Country))];
+
+        // Calculate the explicit percentage and count for each country
+        var countryExplicitData = {};
+        uniqueCountries.forEach(function (country) {
+          var countryTotalData = filteredData.filter(function (d) {
+            return d.Country === country;
+          });
+          var explicitCount = countryTotalData.filter(function (d) {
+            return d.Explicit === 'True';
+          }).length;
+          var totalCount = countryTotalData.length;
+          var percentageExplicit = totalCount > 0 ? (explicitCount * 100 / totalCount) : 0;
+          countryExplicitData[country] = {
+            explicitCount: explicitCount,
+            totalCount: totalCount,
+            percentageExplicit: percentageExplicit
+          };
+        });
+
+      // Draw the map
+      svg.selectAll("path")
+        .data(topo.features)
+        .enter()
+        .append("path")
+        .attr("d", d3.geoPath().projection(projection))
+        .attr("fill", function (d) {
+          var countryName = d.properties.name;
+          var data = countryExplicitData[countryName];
+          var explicitPercentage = data ? data.percentageExplicit : 0;
+          console.log(countryName + ": " + explicitPercentage + "% Explicit");
+          return colorScale(explicitPercentage);
+        })
+        .attr("class", "Country") // Add class for selection
+        .style("stroke", "transparent")
+        .on("mouseover", function (d) {
+          var countryName = d.properties.name;
+          var data = countryExplicitData[countryName];
+          var explicitCount = data ? data.explicitCount : 0;
+          var totalCount = data ? data.totalCount : 0;
+          var explicitPercentage = data ? data.percentageExplicit : 0;
+
+          var tooltip = d3.select(".tooltip");
+          tooltip.transition()
+            .duration(100)
+            .style("opacity", .9);
+          tooltip.html(
+            "<strong>" + countryName + "</strong><br>" +
+            "Explicit Percentage: " + explicitPercentage.toFixed(2) + "%<br>" +
+            explicitCount + " out of " + totalCount + " songs explicit"
+          )
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+
+          d3.selectAll(".Country")
+            .transition()
+            .duration(100)
+            .style("opacity", .5)
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style("opacity", 1)
+            .style("stroke", "black")
+
+        })
+        .on("mouseout", function (d) {
+          d3.select(".tooltip").transition()
+            .duration(100)
+            .style("opacity", 0);
+
+          d3.selectAll(".Country")
+            .transition()
+            .duration(0)
+            .style("opacity", .8)
+          d3.select(this)
+            .transition()
+            .duration(0)
+            .style("stroke", "transparent")
+
+        });
+    }
+
+    function redrawMap(topo, data, year, month) {
+      svg.selectAll("path").remove(); // Remove existing paths
+      drawMap(topo, data, year, month); // Draw map with new data
+    }
+  }
+</script>
