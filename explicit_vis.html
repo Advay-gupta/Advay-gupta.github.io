@@ -206,6 +206,17 @@
 
       document.addEventListener("keydown", function(event) {
         var key = event.key;
+        if (event.key === 'c') {
+          years.forEach(function (year) {
+            monthList.forEach(function (month) {
+              uniqueCountries.forEach(function (country) {
+                isClicked[month + year][country] = 0;
+                var container = document.getElementById(country.toLowerCase().replace(/\s+/g, '-') + month + year + '-container');
+                container.innerHTML = '';
+              });
+            });
+          });
+        }
         if (key === "ArrowLeft") {
           if (parseInt(monthSlider.value) > 1) {
             monthSlider.value = parseInt(monthSlider.value) - 1;
