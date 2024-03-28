@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Country Scores Scatter Plot</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 style="font-family: Impact; text-align: center;">Ephemeral Music Comprehension</h1>
+        <nav>
+          <ul >
+            <li><a href="#home">Home</a></li>
+            <li><a href="#visualizations">Visualizations</a></li>
+            <li><a href="#video">Video</a></li>
+            <li><a href="https://github.com/Advay-gupta/Advay-gupta.github.io">Code</a></li>
+            <li><a href="#report">Report</a></li>
+            <li><a href="#about">About</a></li>
+          </ul>
+        </nav>
+      </header>
+    <div id="tooltip" class="tooltip"></div>   
+    <svg width="800" height="600"></svg>
+    <br>
+    
+    <select id="yearSelector">
+        <option value="all">all</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+        <option value="2019">2019</option>
+        <option value="2020">2020</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        
+      </select>
+      <select id="continentSelector">
+        <option value="all">all</option>
+        <option value="Asia">Asia</option>
+        <option value="Anglo-America">Anglo-America</option>
+        <option value="Europe">Europe</option>
+        <option value="Africa">Africa</option>
+        <option value="Oceania">Oceania</option>
+        <option value="Latin-Americaz   ">Latin-America</option>
+      </select>
+      <div id="countryList"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
