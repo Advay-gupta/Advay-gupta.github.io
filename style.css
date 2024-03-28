@@ -40,6 +40,7 @@ body {
     width: 80%;
     margin: auto;
     padding-top: 40px; /* Adjust padding to make space for the fixed navbar */
+    padding: '10%';
   }
   
   section {
