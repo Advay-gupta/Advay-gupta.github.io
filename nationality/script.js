@@ -19,8 +19,8 @@ function loadData(year,continent) {
       const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
       const svg = d3.select("svg"),
-         width = +svg.attr("width") 
-         height = +svg.attr("height") ;
+         width = +svg.attr("width") - margin.left - margin.right
+         height = +svg.attr("height") - margin.top - margin.bottom;
 
       // sets linear scale for x axis as it only varies from 0-100
       const x = d3.scaleLinear()
@@ -40,20 +40,37 @@ function loadData(year,continent) {
 
       // Plot the position for the X and Y axis
       g.append("g")
-          .attr("transform", `translate(0,${height})`)
-          .call(d3.axisBottom(x));
+         .attr("transform", `translate(0,${height})`)
+         .call(d3.axisBottom(x));
+   
+      g.append("text") // Append a new text element
+         .attr("class", "x axis-label") 
+         .attr("text-anchor", "middle") // Center the text
+         .attr("x", width / 2) // Position at the middle of the axis
+         .attr("y", height + margin.bottom - 10) // Position below the axis
+         .text("Average Score"); // Text content for the label
+         
 
       g.append("g")
-          .call(d3.axisLeft(y).ticks(null, ".1s"));
+         .call(d3.axisLeft(y).ticks(null, ".1s"));
+
+      g.append("text") // Append a new text element
+         .attr("class", "y axis-label") 
+         .attr("text-anchor", "middle") // Center the text
+         .attr("transform", `rotate(-90)`) // Rotate the text for vertical orientation
+         .attr("x", -height / 2) // X is now the vertical position, center it
+         .attr("y", -margin.left + 20) // Position it to the left of the axis
+         .text("Total Score [Logarithmic]"); // Text content for the label
+        
 
       // the flag data is in country codes , hence we translate it using the file with the translation present
       filteredData.forEach(d => {
          if (d.country in countryCodes) {
-             d.countryCode = countryCodes[d.country].toLowerCase();
-             console.log(d.countryCode);
+            d.countryCode = countryCodes[d.country].toLowerCase();
+            console.log(d.countryCode);
          } else {
-             console.warn(`No code found for country: ${d.country}`);
-             d.countryCode = "";
+            console.warn(`No code found for country: ${d.country}`);
+            d.countryCode = "";
             }
       });
 
