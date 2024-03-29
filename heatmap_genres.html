@@ -8,18 +8,17 @@
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-heatmap.min.js"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
-    /* Tooltip styles */
     .tooltip {
       position: absolute;
-      top: 50px; /* Adjust as needed */
-      left: 50%; /* Center horizontally */
+      top: 50px;
+      left: 50%;
       transform: translateX(-50%);
       background-color: rgba(0, 0, 0, 0.7);
       color: white;
       padding: 5px;
       border-radius: 5px;
       pointer-events: none; /* Ensure the tooltip does not block mouse events */
-      transition: opacity 0.3s ease-in-out; /* Add a smooth transition */
+      transition: opacity 0.3s ease-in-out;
       z-index: 999; /* Ensure it's above other elements */
     }
 
@@ -27,49 +26,49 @@
       position: absolute;
       font-size: 30px;
       top: 1%;
-      left: 50%; /* Center horizontally */
+      left: 50%;
       transform: translateX(-50%);
       background-color: rgba(0, 0, 0, 0.7);
       color: white;
-      /* padding: 25px; */
       padding-left: 50px;
       padding-right: 50px;
       border-radius: 5px;
       pointer-events: none; /* Ensure the tooltip does not block mouse events */
-      transition: opacity 0.3s ease-in-out; /* Add a smooth transition */
+      transition: opacity 0.3s ease-in-out;
       z-index: -1; /* Ensure it's above other elements */
     }
 
     #container {
-      height: 900px; /* Adjust as needed */
-      width: 100%; /* Occupy full width */
+      height: 900px;
+      width: 100%;
       padding-top: : 2%;
     }
   </style>
 </head>
 <body>
+  <!-- create the sliders for changing month and year of the displayed data -->
   <div>
     <label for="yearSlider">Year:</label>
-    <input type="range" min="2017" max="2020" value="2017" class="slider" id="yearSlider">
+    <input type="range" min="2017" max="2020" value="2017" class="slider" id="yearSlider" disabled>
     <span id="yearValue"></span>
   </div>
   <div>
     <label for="monthSlider">Month:</label>
-    <input type="range" min="1" max="12" value="1" class="slider" id="monthSlider">
+    <input type="range" min="1" max="12" value="1" class="slider" id="monthSlider" disabled>
     <span id="monthValue"></span>
-
-    <button id="prevMonth">←</button>
-    <button id="nextMonth">→</button>
   </div>
+  <!-- this tooltip houses the permanent tooltip showing currently selected month and year -->
     <div class="tooltipPerm" id="yearMonthTooltip"></div>
     <div id="container"></div>
   <script>
+  // variable to hold the database's loaded data
     var data;
     var monthList = [
     'Filler', 'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
+// function to plot the heatmap
     anychart.onDocumentReady(function () {
       var container = document.getElementById('container');
       var yearSlider = document.getElementById("yearSlider");
@@ -83,12 +82,13 @@
       // Initial heatmap
       d3.csv("FinalDatabase_updated.csv").then(function(csvData) {
         data = csvData; // Store the loaded CSV data in the variable
-        updateHeatmap(yearSlider.value, monthSlider.value, data); // Initial heatmap
+        updateHeatmap(yearSlider.value, monthSlider.value, data);
       });
 
       // Update year and month values
       updateYearMonth();
 
+// redraw map on changing month or year value
       yearSlider.oninput = function () {
         yearOutput.innerHTML = this.value;
         updateHeatmap(this.value, monthSlider.value, data);
@@ -108,6 +108,7 @@
         tooltipPerm.innerHTML = "<strong>" + monthList[parseInt(month)] + "</strong> " + year; // Update tooltip content
       }
 
+// function to change the month and year on press of the arrow keys
       document.addEventListener("keydown", function(event) {
         var key = event.key;
         if (key === "ArrowLeft") {
@@ -135,32 +136,6 @@
         }
       });
 
-      prevMonthButton.onclick = function () {
-        if (parseInt(monthSlider.value) > 1) {
-          monthSlider.value = parseInt(monthSlider.value) - 1;
-        } else {
-          if (parseInt(yearSlider.value) > 2017) {
-            yearSlider.value = parseInt(yearSlider.value) - 1;
-            monthSlider.value = 12;
-          }
-        }
-        updateHeatmap(yearSlider.value, monthSlider.value, data);
-        updateYearMonth();
-      }
-
-      nextMonthButton.onclick = function () {
-        if (parseInt(monthSlider.value) < parseInt(monthSlider.max)) {
-          monthSlider.value = parseInt(monthSlider.value) + 1;
-        } else {
-          if (parseInt(yearSlider.value) < 2020) {
-            yearSlider.value = parseInt(yearSlider.value) + 1;
-            monthSlider.value = 1;
-          }
-        }
-        updateHeatmap(yearSlider.value, monthSlider.value, data);
-        updateYearMonth();
-      }
-
       function updateHeatmap(year, month, data) {
         // Filter data based on selected year and month
         var filteredData = data.filter(function(d) {
@@ -171,6 +146,7 @@
         // Get unique countries and genres
         var countries = [...new Set(filteredData.map(d => d.Country))];
 
+        // the most popular genres in the database (for relevance) (involved in >1000 rows in the database)
         var genres = [
           'dance pop',
           'latin',
@@ -229,12 +205,9 @@
             countryData[genre] = percentage;
             countryData[genre + 'filtered'] = genreSongs;
             countryData[genre + 'total'] = totalSongs;
-            // countryData[genre] = genreSongs;
           });
           heatmapData.push(countryData);
         });
-
-        // console.log(heatmapData);
 
         // Convert data to format suitable for AnyChart heatmap
         var anychartData = [];
@@ -250,16 +223,13 @@
           });
         });
 
-        // console.log(anychartData);
-
         container.innerHTML = '';
-        // Create AnyChart heatmap
 
+        // Create AnyChart heatmap
         var chart = anychart.heatMap(anychartData);
         chart.title("Heatmap of Genre Distribution by Country");
         chart.container(container);
 
-        // Set color scale to yellow and black
         // Define the color scale for the heatmap
         var colorScale = anychart.scales.linearColor();
         colorScale.colors(["black", "#010101", "#020202", "#030303", "#040404", "#050505", "#060606", "#070707", "#080808", "#090909", "#0A0A0A", "#0B0B0B", "#0C0C0C", "#0D0D0D", "#0E0E0E", "#0F0F0F", "#101010", "#111111",
@@ -277,6 +247,7 @@
         "#E3E3E3", "#E4E4E4", "#E5E5E5", "#E6E6E6", "#E7E7E7", "#E8E8E8", "#E9E9E9", "#EAEAEA", "#EBEBEB", "#ECECEC", "#EDEDED", "#EEEEEE", "#EFEFEF", "#F0F0F0", "#F1F1F1", "#F2F2F2", "#F3F3F3", "#F4F4F4", "#F5F5F5",
         "#F6F6F6", "#F7F7F7", "#F8F8F8", "#F9F9F9", "#FAFAFA", "#FBFBFB", "#FCFCFC", "#FDFDFD", "#FEFEFE", "yellow"]); // Black for 0% participation, yellow for others
 
+        // DEFINE THE TOOLTIP FORMAT FOR THE HEATMAP
         chart.tooltip().titleFormat(function () {
           return 'Value: ' + this.getData('heat').toFixed(2) + '%' + ' (' + this.getData('filtered') + '/' + this.getData('total') + ' are Explicit' + ')';
         });

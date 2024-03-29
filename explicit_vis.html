@@ -10,26 +10,25 @@
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
   <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-heatmap.min.js"></script>
   <style>
-    /* Tooltip styles */
     .tooltip {
       position: absolute;
-      top: 50px; /* Adjust as needed */
-      left: 50%; /* Center horizontally */
+      top: 50px;
+      left: 50%;
       transform: translateX(-50%);
       background-color: rgba(0, 0, 0, 0.7);
       color: white;
       padding: 5px;
       border-radius: 5px;
       pointer-events: none; /* Ensure the tooltip does not block mouse events */
-      transition: opacity 0.3s ease-in-out; /* Add a smooth transition */
+      transition: opacity 0.3s ease-in-out;
       z-index: 999; /* Ensure it's above other elements */
     }
 
     .tooltipPerm {
       position: absolute;
       font-size: 30px;
-      top: 50px; /* Adjust as needed */
-      left: 70%; /* Center horizontally */
+      top: 50px;
+      left: 70%;
       transform: translateX(-50%);
       background-color: rgba(0, 0, 0, 0.7);
       color: white;
@@ -38,7 +37,7 @@
       padding-right: 50px;
       border-radius: 5px;
       pointer-events: none; /* Ensure the tooltip does not block mouse events */
-      transition: opacity 0.3s ease-in-out; /* Add a smooth transition */
+      transition: opacity 0.3s ease-in-out;
       z-index: 999; /* Ensure it's above other elements */
     }
 
@@ -79,9 +78,10 @@
   </style>
 </head>
 <body>
-  <!-- THIS IS  -->
+  <!-- THIS IS THE CONTAINER FOR THE PERMANENT TOOLTIP SHOWING CURRENTLY SELECTED MONTH AND YEAR -->
   <div class="tooltipPerm" id="yearMonthTooltip"></div>
 
+  <!-- SLIDERS FOR SELECTING MONTH AND YEAR -->
   <div>
     <label for="yearSlider">Year:</label>
     <input type="range" min="2017" max="2020" value="2017" class="slider" id="yearSlider" disabled>
@@ -91,10 +91,9 @@
     <input type="range" min="1" max="12" value="1" class="slider" id="monthSlider" disabled>
   </div>
 
-  <!-- Create an element where the map will take place -->
+  <!-- THIS ELEMENT WILL HOUSE THE MAP -->
   <svg id="my_dataviz" width="800" height="600"></svg>
   <div id="info-container">
-    <!-- Add your text and images here -->
     <h2>Welcome!</h2>
     <p>
       Hover over the choropleth's countries to see the corresponding heatmap of genres.<br></p>
@@ -107,7 +106,7 @@
     </p>
   </div>
   </div>
-  <!-- Tooltip -->
+  <!-- THIS DIV HOUSES THE TEMPORARY HEATMAP AS A TOOLTIP -->
   <div class="tooltip" style="opacity: 0;"></div>
 
   <div id="container"></div>
@@ -131,29 +130,29 @@
 
     console.log(isClicked);
 
-    // The svg
+    // SELECT THE FIRST SVG IN THE CODE
     var svg = d3.select("svg"),
       width = +svg.attr("width"),
       height = +svg.attr("height");
 
-    // Map and projection
     var path = d3.geoPath();
     var projection = d3.geoMercator()
       .scale(150)
       .center([0, 20])
       .translate([width / 2, height / 2]);
 
-    // Color scale
+    // Color scale for the choropleth
     var gradientScale = d3.scaleLinear()
       .domain([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
       .range(["#b3d9ff", "#80b3ff", "#4d8cff", "#1a66ff", "#0047b3", "#ff9999", "#ff6666", "#ff3333", "#ff0000", "#cc0000", "#990000"]);
 
-    // Load external data and boot
+    // DATA FROM GEOJSON FILE AND DATA FROM THE DATABSE CSV ARE STORED IN topo and data VARIABLES PASSED TO ready() FUNCTION
     d3.queue()
       .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
       .defer(d3.csv, "FinalDatabase_updated.csv?v=1") // Load CSV data with unique query parameter
       .await(ready);
 
+    // WHEN DATA IS LOADED, THEN ONLY THIS FUNCTION IS CALLED BY await(ready)
     function ready(error, topo, data) {
       var yearSlider = document.getElementById("yearSlider");
       var monthSlider = document.getElementById("monthSlider");
@@ -198,6 +197,7 @@
         tooltipPerm.innerHTML = "<strong>" + monthList[parseInt(month)] + "</strong> " + year; // Update tooltip content
       }
 
+      // THIS CHANGES THE MONTH AND YEAR AS A RESPONSE TO LEFT ARROW AND RIGHT ARROW KEY CLICK, AND THEN REDRAWS THE MAP
       document.addEventListener("keydown", function(event) {
         var key = event.key;
         if (key === "ArrowLeft") {
@@ -227,8 +227,9 @@
         }
       });
 
+      // FUNCTION TO DRAW THE CHOROPLETH MAP, TAKES THE data VARIABLE CONTAINING DATABASE AS AN ARGUEMENT
       function drawMap(topo, data, year, month) {
-        console.log(year + "-" + (month.length === 1 ? '0' + month : month));
+        // FILTERES DATA TO ONLY RETAIN THE DATA OF THE CURRENTLY SELECTED MONTH AND YEAR
         var filteredData = data.filter(function (d) {
           var modifiedMonthString = month.length === 1 ? '0' + month : month;
           return d.Release_date.includes(year + "-" + modifiedMonthString);
@@ -237,6 +238,7 @@
         // Store all unique values of the 'Country' column in filteredData
         var uniqueCountries = [...new Set(filteredData.map(d => d.Country))];
 
+        // INITIALISING THE DICT WHICH KEEPS TRACK OF WHETHER A COUNTRY WAS CLICKED OR NOT
         years.forEach(function (year) {
           monthList.forEach(function (month) {
             uniqueCountries.forEach(function (country) {
@@ -283,12 +285,14 @@
         .attr("class", "Country")
         .style("stroke", "transparent")
         .on("mouseover", function (d) {
+          // ON MOUSEOVER A COUNTRY, SHOW ITS TOOLTIP WITH ITS INFORMATION ALONG WITH A HEATMAP SHOWING GENRE DISTRIBUTION OF THAT COUNTRY IN THAT MONTH AND YEAR
           var countryName = d.properties.name;
           var data = countryExplicitData[countryName];
           var explicitCount = data ? data.explicitCount : 0;
           var totalCount = data ? data.totalCount : 0;
           var explicitPercentage = data ? data.percentageExplicit : 0;
 
+           // BASIC TOOLTIP AND HIGHLIGHT EFFECT
           var tooltip = d3.select(".tooltip");
           tooltip.transition()
             .duration(100)
@@ -311,11 +315,13 @@
             .style("opacity", 1)
             .style("stroke", "black")
 
+          // CODE FOR PLOTTING THE HEATMAP TOOLTIP
           anychart.onDocumentReady(function () {
               var countryName = d.properties.name;
               var container = document.getElementById('container');
               console.log(d.properties.name)
 
+              // LIST OF MOST POPULAR GENRES IN OUR DATA (>1000 rows occupied by these genres in our database)
               var genres = [
                 'dance pop',
                 'latin',
@@ -356,6 +362,7 @@
                 'rap'
               ]
 
+              // FILTER THE RAW DATA TO STORE THE COUNTRIES AND THE PERCENTAGE OF EACH PARTICULAR GENRE'S SONGS FROM THAT COUNTRY
               var heatmapData = [];
               var country = d.properties.name;
               var countryData = {};
@@ -376,6 +383,7 @@
               });
               heatmapData.push(countryData);
 
+              // CONVERT THE FILTERED DATA INTO A FORMAT SUITABLE FOR PLOTTING HEATMAP
               var anychartData = [];
               heatmapData.forEach(function(countryData) {
                 genres.forEach(function(genre) {
@@ -389,8 +397,6 @@
                 });
               });
 
-              console.log(anychartData);
-
               container.innerHTML = '';
 
               // Create AnyChart heatmap
@@ -398,7 +404,7 @@
               chart.title("Heatmap of Genre Distribution by Country");
               chart.container(container);
 
-              // Define the color scale for the heatmap
+              // Define the color scale for the heatmap (100 COLORS GRADIENT)
               var colorScale = anychart.scales.linearColor();
               colorScale.colors(["black", "#010101", "#020202", "#030303", "#040404", "#050505", "#060606", "#070707", "#080808", "#090909", "#0A0A0A", "#0B0B0B", "#0C0C0C", "#0D0D0D", "#0E0E0E", "#0F0F0F", "#101010", "#111111",
               "#121212", "#131313", "#141414", "#151515", "#161616", "#171717", "#181818", "#191919", "#1A1A1A", "#1B1B1B", "#1C1C1C", "#1D1D1D", "#1E1E1E", "#1F1F1F", "#202020", "#212121", "#222222", "#232323", "#242424",
@@ -415,6 +421,7 @@
               "#E3E3E3", "#E4E4E4", "#E5E5E5", "#E6E6E6", "#E7E7E7", "#E8E8E8", "#E9E9E9", "#EAEAEA", "#EBEBEB", "#ECECEC", "#EDEDED", "#EEEEEE", "#EFEFEF", "#F0F0F0", "#F1F1F1", "#F2F2F2", "#F3F3F3", "#F4F4F4", "#F5F5F5",
               "#F6F6F6", "#F7F7F7", "#F8F8F8", "#F9F9F9", "#FAFAFA", "#FBFBFB", "#FCFCFC", "#FDFDFD", "#FEFEFE", "yellow"]); // Black for 0% participation, yellow for others
 
+              // SET THE TOOLTIP FORMAT OF HEATMAP
               chart.tooltip().titleFormat(function () {
                 return 'Value: ' + this.getData('heat').toFixed(2) + '%' + ' (' + this.getData('filtered') + '/' + this.getData('total') + ' are Explicit' + ')';
               });
@@ -428,7 +435,7 @@
                 // Split the genre label into words
                 var words = genres[this.index].split(' ');
                 if (words.length > 1){
-                  // Extract the first letter of each word and join them with periods
+                  // REDUCE THE LENGHT OF GENRE NAMES BY ABBREVIATING THE FIRST WORD
                   var abbreviatedLabel = words[0].charAt(0) + '. ';
                   abbreviatedLabel += words.slice(1).join(' ');
                   return abbreviatedLabel;
@@ -436,17 +443,18 @@
                 else{
                   return genres[this.index];
                 }
-              }).fontWeight('bold').fontColor('black'); // Set font weight to bold and font color to black
+              }).fontWeight('bold').fontColor('black');
 
               chart.yAxis().labels().format(function() {
                 return country;
-              }).fontWeight('bold').fontColor('black'); // Set font weight to bold and font color to black
+              }).fontWeight('bold').fontColor('black');
 
               chart.draw();
           });
 
         })
         .on("mouseout", function (d) {
+          // HANDLE REMOVING TOOLTIPS ON STOPPING HOVER
           d3.select(".tooltip").transition()
             .duration(100)
             .style("opacity", 0);
@@ -464,6 +472,7 @@
 
         })
         .on("click", function (d) {
+          // CREATE A NEW CONTAINER FOR THE NEW PERMANENT TOOLTIP
             var container = document.getElementById(d.properties.name.toLowerCase().replace(/\s+/g, '-') + monthList[monthSlider.value] + yearSlider.value.toString() + '-container');
             // Check if the container already exists
             console.log(monthList[monthSlider.value] + yearSlider.value.toString())
@@ -476,10 +485,9 @@
                 }
             }
             else{
-            // Display the clicked country's name inside the container div
+              // HANDLE PERMANENTLY SHOWING TOOLTIP ON CLICKING ON A COUNTRY AND REMOVING ON A DOUBLE CLICK
               anychart.onDocumentReady(function () {
                 var countryName = d.properties.name;
-                console.log(d.properties.name)
 
                 var genres = [
                   'dance pop',
@@ -526,6 +534,7 @@
                 var countryData = {};
                 countryData['name'] = country;
 
+                // TOGGLE THE VALUE OF isClicked CORRESPONDING TO THE COUNTRY, CURRENT MONTH AND YEAR
                 if (isClicked[monthList[monthSlider.value] + yearSlider.value.toString()][country]){
                   isClicked[monthList[monthSlider.value] + yearSlider.value.toString()][country] = 0;
                 }
@@ -542,11 +551,10 @@
                     // If the container doesn't exist, create it
                     container = document.createElement('div');
                     container.id = containerId;
-                    document.body.appendChild(container); // Append the container to the body or another parent element
+                    document.body.appendChild(container);
                 }
 
-                console.log("isClicked[" + monthList[monthSlider.value] + yearSlider.value.toString() + "]" + "[" + countryName + "] = ", isClicked[monthList[monthSlider.value] + yearSlider.value.toString()][countryName]);
-
+// FILTER THE DATA AND SAVE THE PERCENTAGE OF SONGS OF EACH GENRE FOR THAT COUNTRY IN THE SELECTED MONTH AND YEAR
                 genres.forEach(function(genre) {
                   var genreSongs = filteredData.filter(function(d) {
                     return d.Country === country && d.Genre === genre
@@ -563,6 +571,7 @@
                 });
                 heatmapData.push(countryData);
 
+// MOULD THE FILTERED DATA INTO A FORMAT SUITABLE FOR PLOTTING ANYCHART HEATMAP
                 var anychartData = [];
                 heatmapData.forEach(function(countryData) {
                   genres.forEach(function(genre) {
@@ -575,8 +584,6 @@
                     anychartData.push(newdic);
                   });
                 });
-
-                console.log(anychartData);
 
                 container.innerHTML = '';
 
@@ -634,6 +641,7 @@
         });
     }
 
+// FUNCTION TO REDRAW THE HEATMAP ON CHANGING VALUE OF MONTH OR YEAR
     function redrawMap(topo, data, year, month) {
       svg.selectAll("path").remove();
       drawMap(topo, data, year, month);
