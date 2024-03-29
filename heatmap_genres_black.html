@@ -232,12 +232,10 @@
 
         // Define the color scale for the heatmap
         var colorScale = anychart.scales.linearColor();
-        colorScale.colors(['#FFFFCC', '#FFFB99', '#FFF666', '#FFF133', '#FFEC00', '#FFE200', '#FFD800', '#FFCE00', '#FFC400', '#FFB900',
-    '#FFAF00', '#FFA400', '#FF9900', '#FF8F00', '#FF8400', '#FF7A00', '#FF7000', '#FF6600', '#FF5B00', '#FF5100',
-    '#FF4700', '#FF3D00', '#FF3300', '#FF2900', '#FF1F00', '#FF1500', '#FF0A00', '#FF0000', '#F30000', '#E60000',
-    '#DA0000', '#CD0000', '#C10000', '#B40000', '#A80000', '#9C0000', '#8F0000', '#830000', '#760000', '#6A0000'
-]); // Black for 0% participation, yellow for others
-chart.colorScale(colorScale)
+        colorScale.colors(['#000000',  '#404040', '#444444', '#484848', '#4C4C4C', 
+    '#505050', '#545454', '#585858', '#5C5C5C', '#606060', '#646464', '#686868', '#6C6C6C', '#707070', '#747474', 
+    '#787878', '#7C7C7C', '#808080', '#848484', '#888888', '#8C8C8C', '#909090', '#949494', '#989898', '#9C9C9C']); // Black for 0% participation, white for others
+        chart.colorScale(colorScale)
         // DEFINE THE TOOLTIP FORMAT FOR THE HEATMAP
         chart.tooltip().titleFormat(function () {
           return 'Value: ' + this.getData('heat').toFixed(2) + '%' + ' (' + this.getData('filtered') + '/' + this.getData('total') + ' are Explicit' + ')';
