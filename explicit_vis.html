@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>World Map Visualization</title>
-  <!-- Load d3.js -->
   <script src="https://d3js.org/d3.v4.js"></script>
   <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
   <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
@@ -44,8 +43,8 @@
     }
 
     #container {
-      height: 150px; /* Adjust as needed */
-      width: 100%; /* Occupy full width */
+      height: 150px;
+      width: 100%;
       padding-top: : 2%;
     }
 
@@ -53,7 +52,7 @@
       position: absolute;
       top: 20%;
       right: 0;
-      width: 50%; /* Adjust width as needed */
+      width: 50%;
       height: 35%;
       padding: 20px;
       background-color: #ffffff;
@@ -73,28 +72,23 @@
     }
 
     #info-container p::before {
-      content: "•"; /* Unicode for a bullet point */
-      color: black; /* Change color as needed */
-      margin-right: 5px; /* Adjust spacing between points */
+      content: "•";
+      color: black;
+      margin-right: 5px;
     }
-
   </style>
 </head>
 <body>
-  <!-- Add year and month tooltips -->
+  <!-- THIS IS  -->
   <div class="tooltipPerm" id="yearMonthTooltip"></div>
 
-  <!-- Add year and month sliders -->
   <div>
     <label for="yearSlider">Year:</label>
     <input type="range" min="2017" max="2020" value="2017" class="slider" id="yearSlider" disabled>
-    <!-- <span id="yearValue"></span> -->
   </div>
   <div>
     <label for="monthSlider">Month:</label>
     <input type="range" min="1" max="12" value="1" class="slider" id="monthSlider" disabled>
-    <!-- <span id="monthValue"></span> -->
-
   </div>
 
   <!-- Create an element where the map will take place -->
@@ -233,32 +227,6 @@
         }
       });
 
-      // prevMonthButton.onclick = function () {
-      //   if (parseInt(monthSlider.value) > 1) {
-      //     monthSlider.value = parseInt(monthSlider.value) - 1;
-      //   } else {
-      //     if (parseInt(yearSlider.value) > 2017) {
-      //       yearSlider.value = parseInt(yearSlider.value) - 1;
-      //       monthSlider.value = 12;
-      //     }
-      //   }
-      //   redrawMap(topo, data, yearSlider.value, monthSlider.value);
-      //   updateYearMonth();
-      // }
-      //
-      // nextMonthButton.onclick = function () {
-      //   if (parseInt(monthSlider.value) < parseInt(monthSlider.max)) {
-      //     monthSlider.value = parseInt(monthSlider.value) + 1;
-      //   } else {
-      //     if (parseInt(yearSlider.value) < 2020) {
-      //       yearSlider.value = parseInt(yearSlider.value) + 1;
-      //       monthSlider.value = 1;
-      //     }
-      //   }
-      //   redrawMap(topo, data, yearSlider.value, monthSlider.value);
-      //   updateYearMonth();
-      // }
-
       function drawMap(topo, data, year, month) {
         console.log(year + "-" + (month.length === 1 ? '0' + month : month));
         var filteredData = data.filter(function (d) {
@@ -346,7 +314,6 @@
           anychart.onDocumentReady(function () {
               var countryName = d.properties.name;
               var container = document.getElementById('container');
-              // container.innerText = "Selected Country: " + countryName;
               console.log(d.properties.name)
 
               var genres = [
