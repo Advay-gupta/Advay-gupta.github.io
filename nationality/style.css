@@ -32,22 +32,7 @@ select{
     margin-left: 10%;
 } */
 
-.box {
-    display: flex; /* Establishes a flex container */
-    align-items: center; /* Aligns items to the start of the container */
-  }
-  
-.info {
-    list-style-type: none; /* Optional: Removes the default list style */
-    margin: 0; /* Removes the default margin */
-    padding-top: 7%;
-    font-size: 12px;
-    margin-bottom: 10px;
-    /* font-family:monospace; */
 
-  }
-  
-  
   
 
 
