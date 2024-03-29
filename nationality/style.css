@@ -28,9 +28,7 @@ select{
     margin-left: 20%;
 }
 
-svg{
-    background-color: #000;
-}
+
 
 .box {
     display: flex; /* Establishes a flex container */
