@@ -65,7 +65,7 @@ function loadData(year,continent) {
         .attr("xlink:href", d => `flags/${d.countryCode}.svg`) // getting the correct flag based on country code
         .attr("width", 20) // flag width
         .attr("height", 20)// flag height
-        .style("filter", "grayscale(100%)"); 
+        .style("filter", "grayscale(100%)")
         // used square for asthetics and minimising obstruction
 
          // another visual feature that ensures the point is on the centre of the flag and not the corner , to make reading easier
