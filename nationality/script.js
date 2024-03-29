@@ -61,7 +61,7 @@ function loadData(year,continent) {
         .data(filteredData)
         .enter().append("image")
         .attr("class", "flag")
-        .attr("xlink:href", d => `https://github.com/Advay-gupta/Advay-gupta.github.io/tree/main/nationality/flags/${d.countryCode}.svg`) // getting the correct flag based on country code 
+        .attr("xlink:href", d => `https://github.com/Advay-gupta/Advay-gupta.github.io/tree/main/nationality/flags/${d.countryCode}.svg?sanitize=true`) // getting the correct flag based on country code 
         .attr("width", 20) // flag width
         .attr("height", 20) // flag height
         // used square for asthetics and minimising obstruction
