@@ -19,8 +19,8 @@ function loadData(year,continent) {
       const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
       const svg = d3.select("svg"),
-         width = +svg.attr("width") - margin.left - margin.right,
-         height = +svg.attr("height") - margin.top - margin.bottom;
+         width = +svg.attr("width") 
+         height = +svg.attr("height") ;
 
       // sets linear scale for x axis as it only varies from 0-100
       const x = d3.scaleLinear()
