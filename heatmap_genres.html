@@ -41,7 +41,7 @@
     }
 
     #container {
-      height: 90%; /* Adjust as needed */
+      height: 900px; /* Adjust as needed */
       width: 100%; /* Occupy full width */
       padding-top: : 2%;
     }
@@ -65,7 +65,6 @@
     <div id="container"></div>
   <script>
     var data;
-
     var monthList = [
     'Filler', 'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -92,13 +91,13 @@
 
       yearSlider.oninput = function () {
         yearOutput.innerHTML = this.value;
-        updateHeatmap(this.value, monthSlider.value);
+        updateHeatmap(this.value, monthSlider.value, data);
         updateYearMonth();
       }
 
       monthSlider.oninput = function () {
         monthOutput.innerHTML = this.value;
-        updateHeatmap(yearSlider.value, this.value);
+        updateHeatmap(yearSlider.value, this.value, data);
         updateYearMonth();
       }
 
@@ -120,7 +119,7 @@
               monthSlider.value = 12;
             }
           }
-          updateHeatmap(yearSlider.value, monthSlider.value);
+          updateHeatmap(yearSlider.value, monthSlider.value, data);
           updateYearMonth();
         } else if (key === "ArrowRight") {
           if (parseInt(monthSlider.value) < parseInt(monthSlider.max)) {
@@ -131,7 +130,7 @@
               monthSlider.value = 1;
             }
           }
-          updateHeatmap(yearSlider.value, monthSlider.value);
+          updateHeatmap(yearSlider.value, monthSlider.value, data);
           updateYearMonth();
         }
       });
@@ -145,7 +144,7 @@
             monthSlider.value = 12;
           }
         }
-        updateHeatmap(yearSlider.value, monthSlider.value);
+        updateHeatmap(yearSlider.value, monthSlider.value, data);
         updateYearMonth();
       }
 
@@ -158,7 +157,7 @@
             monthSlider.value = 1;
           }
         }
-        updateHeatmap(yearSlider.value, monthSlider.value);
+        updateHeatmap(yearSlider.value, monthSlider.value, data);
         updateYearMonth();
       }
 
