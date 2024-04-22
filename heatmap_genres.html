@@ -191,7 +191,8 @@
         var heatmapData = [];
         countries.forEach(function(country) {
           var countryData = {};
-          countryData['name'] = country;
+          countryData['key'] = country;
+          countryData['values'] = [];
           genres.forEach(function(genre) {
             var genreSongs = filteredData.filter(function(d) {
               return d.Country === country && d.Genre === genre
@@ -202,12 +203,16 @@
             }).length;
 
             var percentage = totalSongs > 0 ? (genreSongs / totalSongs) * 100 : 0;
-            countryData[genre] = percentage;
-            countryData[genre + 'filtered'] = genreSongs;
-            countryData[genre + 'total'] = totalSongs;
+            countryData['values'].push({key: genre, value: percentage, parent: country})
+            // console.log(countryData['values'])
+            // countryData[genre] = percentage;
+            // countryData[genre + 'filtered'] = genreSongs;
+            // countryData[genre + 'total'] = totalSongs;
           });
           heatmapData.push(countryData);
         });
+
+        console.log(heatmapData)
 
         // Convert data to format suitable for AnyChart heatmap
         var anychartData = [];
