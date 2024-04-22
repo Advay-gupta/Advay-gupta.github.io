@@ -12,6 +12,7 @@
     
 }
 
+
 select{
     margin-top: 60px;
     margin-left: 30px;
@@ -41,7 +42,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #ececec;
+    background-color: #c1c1c1;
   }
   
 header {

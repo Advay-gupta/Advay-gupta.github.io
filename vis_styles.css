@@ -1,0 +1,25 @@
+header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #000000;
+    color: #fff;
+    padding: 10px;
+    font-family: Impact;
+    text-align: center;
+    z-index: 0; /* Ensure the navbar stays above other content */
+  }
+  .visualization {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.visualization iframe {
+    width: 1200px; /* Adjust width as needed */
+    height: 800px; /* Adjust height as needed */
+    margin-right: 20px;
+}
+.visualization p {
+    flex: 1;
+}
