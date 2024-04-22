@@ -4,47 +4,47 @@
     <title>Visualizations</title>
     <style>
         body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #0e0e0e;
-  color: rgb(255, 255, 255);
-}
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #0e0e0e;
+          color: rgb(255, 255, 255);
+        }
 
-header {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  background-color: #00c23e;
-  color: #000000;
-  padding: 10px;
-  font-family: Impact;
-  text-align: center;
-  z-index: 0; /* Ensure the navbar stays above other content */
-}
+        header {
+          position: sticky;
+          top: 0;
+          width: 100%;
+          background-color: #00c23e;
+          color: #000000;
+          padding: 10px;
+          font-family: Impact;
+          text-align: center;
+          z-index: 0; /* Ensure the navbar stays above other content */
+        }
 
-header h1 {
-  margin: 0;
-}
+        header h1 {
+          margin: 0;
+        }
 
-nav ul {
-  list-style: none;
-  text-emphasis: none;
-  padding: 0;
-}
+        nav ul {
+          list-style: none;
+          text-emphasis: none;
+          padding: 0;
+        }
 
-nav ul li {
-  display: inline;
-  margin-right: 20px;
-}
+        nav ul li {
+          display: inline;
+          margin-right: 20px;
+        }
 
-nav ul li:hover{
-  background-color: #aa8b8b;
-}
-nav ul li a {
-  color: #484848;
-  text-decoration: none;
-}
+        nav ul li:hover{
+          background-color: #aa8b8b;
+        }
+        nav ul li a {
+          color: #484848;
+          text-decoration: none;
+        }
 
 
 
@@ -61,7 +61,7 @@ nav ul li a {
             /* margin-right: 20px; */
             padding: 50px;
             border-radius: 2%;
-            background-color: rgb(194, 194, 194);
+            background-color: rgb(255, 255, 255);
         }
         .visualization p {
             flex: 1;
@@ -108,18 +108,22 @@ nav ul li a {
     </div>
     <div class="visualization">
         <p>Description for Visualization 2</p>
-        <iframe src="pie.html" style="width: 1200px; height: 600px;" alt="Visualization 2"></iframe>
+        <iframe src="cluster_heatmap.html" style="width: 1400px; height: 1000px;" alt="Visualization 2"></iframe>
     </div>
     <div class="visualization">
-        <iframe src="explicit_vis.html" style="width: 1600px; height: 800px;" alt="Visualization 3"></iframe>
-        <p>Description for Visualization 3</p>
+        
+        <object type="image/svg+xml" data="ridgeline_plot.svg" width="1400" height="800" aria-label="Description of SVG content.">
+            <!-- Fallback content for browsers that do not support object element or SVG -->
+            Your browser does not support SVG
+        </object>
+        <p>Description for Visualization 2</p>
     </div>
     <div class="visualization">
         <p>Description for Visualization 2</p>
         <iframe src="bubble.html" style="width: 1200px; height: 600px;" alt="Visualization 2"></iframe>
     </div>
     <div class="visualization">
-        <iframe src="explicit_vis.html" style="width: 1600px; height: 800px;" alt="Visualization 3"></iframe>
+        <iframe src="heatmap_genres.html" style="width: 1600px; height: 800px;" alt="Visualization 3"></iframe>
         <p>Description for Visualization 3</p>
     </div>
     
