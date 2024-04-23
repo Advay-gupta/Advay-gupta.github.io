@@ -56,7 +56,7 @@
             padding: 50px;
         }
         .visualization iframe {
-            /* width: 2000px; 
+            /* width: 2000px;
             height: 1200px;  */
             /* margin-right: 20px; */
             padding: 50px;
@@ -94,49 +94,56 @@
         <h3 style="text-align: center;padding-left :80px; padding-right: 80px; padding-top: 30px;">Explore insightful visualizations of data that tell compelling stories.Our project aims to delve into the rich world of music using Spotify data to understand the changing landscape of genres and trends over time. By employing data visualization techniques, we seek to unravel patterns, correlations, and shifts within the vast realm of musical preferences. Music is the window to the soul, as the type of music we listen to might reflect our personality and thoughts.Music is such an integral part of most people's lives that trends in music can reflect the trends in thought of society in general.</h3>
         <p></p>
       </div>
-    
-      
+
+
       <div class="visualization">
         <iframe src="nationality/index.html" style="width: 1300px; height: 800px;" alt="Visualization 1"></iframe>
-        
-          
+
+
           <p>In this visualisation the aim was to visualize the performance of artist of a given country . Countries along the expected value line had average performing artists.
             Countries that had high averages but low total scores have few very popular artists but their artists struggle to gain popularity, these countries are in the bottom right. Countries that had low averages but high total scores have many artists that are decently popular but none that are very popular , these are in the top left.</p>
-          
-        
-        
+
+
+
     </div>
     <div class="visualization">
+        
+        <p>A major portion of songs nowadays seem to have explicit lyrics or innuendos, and with this graph we have tried to capture how much percentage of the top songs of a country are explicit. THe tooltip of popular genres can help us idnetify the most popular genres of that country, so we can make correlations between the most popular genres being explicit in nature and increasing the percentage of explicit songs in a country.</p>
+        <iframe src="explicit_vis.html" style="width: 1400px; height: 800px;" alt="Visualization 3"></iframe>
+      </div>
+
+    <div class="visualization">
+      <iframe src="cluster_heatmap.html" style="width: 1400px; height: 1000px;" alt="Visualization 2"></iframe>
+        <p>We saw how certain explcit genres are more popular in some countries making their songs explicit in general. THrough this cluster heatmap we can identify the clusters of famous genres in each country and draw conclusions about which type of genres tend to become popular, and try to find the common things which these genres of eahc cluster have, which tends to make them popular.</p>
+       
+    </div>
+
+    <div class="visualization">
+        <p>We have looked at genres until now, but not at songs which might have spearheaded their rise to popularity. This plot can help us to easily identify the top songs of each time period(each 3 months), and their genres, so we can identify which songs might have spearheaded the rise of a genre.</p>
+        <iframe src="bubble.html" style="width: 1200px; height: 600px;" alt="Visualization 2"></iframe>
+    </div>
+
+    <div class="visualization">
+      <iframe src="pie.html" style="width: 1200px; height: 600px;" alt="Visualization 2"></iframe>
         <p>In this Pie chart the goal was to the show how certain genres dominate the music industry and also the difference in market share in total streams and weekly charts</p>
-        <iframe src="pie.html" style="width: 1200px; height: 600px;" alt="Visualization 2"></iframe>
+       
     </div>
-    <div class="visualization">
-        <iframe src="explicit_vis.html" style="width: 1600px; height: 800px;" alt="Visualization 3"></iframe>
-        <p>Description for Visualization 3</p>
-    </div>
-    <div class="visualization">
-        <p>Description for Visualization 2</p>
-        <iframe src="cluster_heatmap.html" style="width: 1400px; height: 1000px;" alt="Visualization 2"></iframe>
-    </div>
+
     <div class="visualization">
         
+        <p>We have seen how some genres tend to dominate the industry. But why do they tend to become popular? This splom tries to see the effect of and correlation between popularity of songs and their attributes like energy, daceability, acousticness, etc to gain an insight into this.</p>
+        <iframe src="splom.html" style="width: 1300px; height: 800px;" alt="Visualization 3"></iframe>
+      </div>
+
+    <div class="visualization">
+
         <object type="image/svg+xml" data="ridgeline_plot.svg" width="1400" height="800" aria-label="Description of SVG content.">
             <!-- Fallback content for browsers that do not support object element or SVG -->
             Your browser does not support SVG
         </object>
         <p>This ridgeline plot aims to visualise when each genre was in the weekly top charts in 2021 , it shows how music popularity is not isolated and depends on current trends </p>
     </div>
-    <div class="visualization">
-        <p>Description for Visualization 2</p>
-        <iframe src="bubble.html" style="width: 1200px; height: 600px;" alt="Visualization 2"></iframe>
-    </div>
-    <div class="visualization">
-        <iframe src="splom.html" style="width: 1300px; height: 800px;" alt="Visualization 3"></iframe>
-        <p>Description for Visualization 3</p>
-    </div>
-    
-    
-    
+
     <!-- Add more visualizations and descriptions as needed -->
 </body>
 </html>
