@@ -395,8 +395,10 @@
 
               // CONVERT THE FILTERED DATA INTO A FORMAT SUITABLE FOR PLOTTING HEATMAP
               var anychartData = [];
-              heatmapData.forEach(function(countryData) {
-                genres.forEach(function(genre) {
+              heatmapData.forEach(function (countryData) {
+                genres.sort(function(a, b) {
+                  return countryData[b] - countryData[a];
+                }).forEach(function (genre) {
                   var newdic = {};
                   newdic['x'] = genre;
                   newdic['y'] = countryData["name"];
@@ -569,10 +571,12 @@
                 });
                 heatmapData.push(countryData);
 
-// MOULD THE FILTERED DATA INTO A FORMAT SUITABLE FOR PLOTTING ANYCHART HEATMAP
+                // MOULD THE FILTERED DATA INTO A FORMAT SUITABLE FOR PLOTTING ANYCHART HEATMAP
                 var anychartData = [];
-                heatmapData.forEach(function(countryData) {
-                  genres.forEach(function(genre) {
+                heatmapData.forEach(function (countryData) {
+                  genres.sort(function(a, b) {
+                    return countryData[b] - countryData[a];
+                  }).forEach(function (genre) {
                     var newdic = {};
                     newdic['x'] = genre;
                     newdic['y'] = countryData["name"];
@@ -582,7 +586,6 @@
                     anychartData.push(newdic);
                   });
                 });
-
                 container.innerHTML = '';
 
                 // Create AnyChart heatmap
